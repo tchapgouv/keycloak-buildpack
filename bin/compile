@@ -83,10 +83,11 @@ step "Adding extensions from quarkus extensions directory"
 if [[ -f "${ENV_DIR}/QUARKUS_EXTENSIONS_DIR" ]]; then
   QUARKUS_EXTENSIONS_DIR=$(cat "${ENV_DIR}/QUARKUS_EXTENSIONS_DIR")
   if [[ -d "${BUILD_DIR}/${QUARKUS_EXTENSIONS_DIR}" ]]; then
-    jar_file=$(find "${BUILD_DIR}/${QUARKUS_EXTENSIONS_DIR}"/*.jar | head -n 1)
-    start "Installing jars ${jar_file}"
-    cp "${jar_file}" "${KEYCLOAK_PATH}/providers/"
-    finished
+    for jar_file in "${BUILD_DIR}/${QUARKUS_EXTENSIONS_DIR}"/*.jar; do
+      start "Installing extension ${jar_file}"
+      cp "${jar_file}" "${KEYCLOAK_PATH}/providers/"
+      finished
+    done
   else
         warn "Unable to found directory : ${BUILD_DIR}/${QUARKUS_EXTENSIONS_DIR}"
   fi
